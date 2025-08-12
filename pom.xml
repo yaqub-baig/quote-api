@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.service.other</groupId>
-    <artifactId>QuoteServiceApplication</artifactId>
+    <artifactId>QuoteApi</artifactId>
     <version>0.1</version>
-    <name>OtherServiceApplication</name>
+    <name>QuoteApi</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
