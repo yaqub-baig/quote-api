@@ -4,7 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.service.other</groupId>
+    <groupId>com.autoadda.apis.quote</groupId>
     <artifactId>QuoteApi</artifactId>
     <version>0.1</version>
     <name>QuoteApi</name>

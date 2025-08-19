@@ -18,11 +18,13 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
         </processorPath>
         <module name="QuoteServiceApplication" />
+        <module name="QuoteApi" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="QuoteApi" options="-parameters" />
       <module name="QuoteServiceApplication" options="-parameters" />
     </option>
   </component>
