@@ -14,9 +14,12 @@ public interface QuotationService {
 
     Optional<QuotationResponse> getQuotationByQuoteNumber(String quoteNumber);
 
-    QuotationResponse createQuotation(QuotationRequest quotation);
+    List<QuotationResponse> createQuotation(QuotationRequest quotation);
 
     Optional<QuotationResponse> updateQuotation(String id, QuotationRequest updated);
 
     boolean deleteQuotation(String id);
+
+    List<QuotationResponse> getQuotationByGarageId(Integer id);
+
 }

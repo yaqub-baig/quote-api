@@ -22,7 +22,6 @@ public class QuotationMapper {
         entity.setIssuedDate ( LocalDateTime.now ( ) );
         entity.setServiceId ( quotation.getServiceId ( ) );
         entity.setCustomerId ( quotation.getCustomerId ( ) );
-        entity.setGarageIds ( quotation.getGarageIds ( ) );
         return entity;
     }
 
@@ -34,7 +33,7 @@ public class QuotationMapper {
         Optional.ofNullable ( save.getExpiryDate ( ) ).ifPresent ( response::setExpiryDate );
         Optional.ofNullable ( save.getCustomerNotes ( ) ).ifPresent ( response::setCustomerNotes );
         Optional.ofNullable ( save.getVehicleId ( ) ).ifPresent ( response::setVehicleId );
-        Optional.ofNullable ( save.getGarageIds ( ) ).ifPresent ( response::setGarageId );
+        Optional.ofNullable ( save.getGarageId ( ) ).ifPresent ( response::setGarageId );
         Optional.ofNullable ( save.getFullName ( ) ).ifPresent ( response::setFullName );
         Optional.ofNullable ( save.getPhoneNumber ( ) ).ifPresent ( response::setPhoneNumber );
         Optional.ofNullable ( save.getTechnicianNotes ( ) ).ifPresent ( response::setTechnicianNotes );
@@ -53,6 +52,6 @@ public class QuotationMapper {
         Optional.ofNullable ( updated.getVehicleId ( ) ).ifPresent ( existing::setVehicleId );
         Optional.ofNullable ( updated.getServiceId ( ) ).ifPresent ( existing::setServiceId );
         Optional.ofNullable ( updated.getCustomerId ( ) ).ifPresent ( existing::setCustomerId );
-        Optional.ofNullable ( updated.getGarageIds ( ) ).ifPresent ( existing::setGarageIds );
+
     }
 }

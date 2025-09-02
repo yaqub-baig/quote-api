@@ -44,17 +44,22 @@ public class QuotationServiceImpl implements QuotationService {
     }
 
     @Override
-    public QuotationResponse createQuotation(QuotationRequest request) {
+    public List<QuotationResponse> createQuotation(QuotationRequest request) {
+        List<Quotation> list = request.getGarageIds ( ).stream ( ).map ( garageId -> {
         Quotation quotation = quotationMapper.toEntity ( request );
-        quotation.setQuoteNumber ( generateQuotationCode ( ) );
-        return quotationMapper.toResponse ( quotationRepository.save ( quotation ));
+            quotation.setGarageId ( garageId );
+            quotation.setQuoteNumber ( generateQuotationCode ( ) );
+            return quotationRepository.save ( quotation );
+        } ).toList ( );
+        return list.stream ().map(quotationMapper::toResponse ).toList ();
     }
 
     @Override
     public Optional<QuotationResponse> updateQuotation(String id, QuotationRequest updated) {
         return quotationRepository.findById ( id )
                 .map ( existing -> {quotationMapper.updateEntity ( existing, updated );
-            return quotationMapper.toResponse ( quotationRepository.save ( existing ));
+                    Quotation save = quotationRepository.save ( existing );
+                    return quotationMapper.toResponse ( save);
         } );
     }
 
@@ -65,6 +70,12 @@ public class QuotationServiceImpl implements QuotationService {
         }
         quotationRepository.deleteById ( id );
         return true;
+    }
+
+    @Override
+    public List<QuotationResponse> getQuotationByGarageId(Integer id) {
+        return quotationRepository.findByGarageId ( id ).stream ()
+                .map ( quotationMapper::toResponse ).toList ();
     }
 
     private String generateQuotationCode() {

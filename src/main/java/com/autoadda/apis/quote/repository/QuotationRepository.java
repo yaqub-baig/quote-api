@@ -1,6 +1,7 @@
 package com.autoadda.apis.quote.repository;
 
 
+import aj.org.objectweb.asm.commons.Remapper;
 import com.autoadda.apis.quote.entity.Quotation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +17,5 @@ public interface QuotationRepository extends JpaRepository<Quotation, String> {
     @Query("SELECT r.quoteNumber FROM Quotation r WHERE r.quoteNumber LIKE :prefix% ORDER BY r.quoteNumber DESC")
     List<String> findLatestCodesByPrefix(@Param("prefix") String codePrefix);
 
+    List<Quotation> findByGarageId(Integer id);
 }

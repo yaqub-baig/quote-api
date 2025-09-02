@@ -56,7 +56,7 @@ public class Quotation {
     private String vehicleId;
 
     @Column(name = "garage_id")
-    private String garageIds;
+    private Integer garageId;
 
     @Column(name = "employee_id")
     private String employeeId;
