@@ -1,19 +1,6 @@
 package com.autoadda.apis.quote.service;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import com.autoadda.apis.quote.mapper.QuotationMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,6 +11,17 @@ import com.autoadda.apis.quote.entity.Quotation;
 import com.autoadda.apis.quote.repository.QuotationRepository;
 import com.autoadda.apis.quote.request.QuotationRequest;
 import com.autoadda.apis.quote.response.QuotationResponse;
+import com.autoadda.apis.quote.mapper.QuotationMapper;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class QuotationServiceImplTest {
@@ -48,15 +46,18 @@ public class QuotationServiceImplTest {
         quotation.setId("Q123");
         quotation.setQuoteNumber("RQ-2312-000001");
         quotation.setIssuedDate(LocalDateTime.now());
+        quotation.setGarageId(1);
 
         // Setup a sample request
         quotationRequest = new QuotationRequest();
-        // Set request properties as needed
+        quotationRequest.setGarageIds(Arrays.asList(1, 2, 3));
+        // Set other request properties as needed
 
         // Setup a sample response
         quotationResponse = new QuotationResponse();
         quotationResponse.setId("Q123");
         quotationResponse.setQuoteNumber("RQ-2312-000001");
+        quotationResponse.setGarageId(1);
     }
 
     @Test
@@ -142,29 +143,59 @@ public class QuotationServiceImplTest {
     }
 
     @Test
-    void createQuotation_shouldGenerateQuoteNumberAndSave() {
+    void createQuotation_shouldGenerateQuoteNumberAndSaveForEachGarage() {
         // Arrange
-        Quotation mappedQuotation = new Quotation();
-        mappedQuotation.setQuoteNumber("RQ-2312-000002");
+        List<Integer> garageIds = Arrays.asList(1, 2, 3);
+        quotationRequest.setGarageIds(garageIds);
 
-        when(quotationMapper.toEntity(quotationRequest)).thenReturn(mappedQuotation);
-        when(quotationRepository.save(mappedQuotation)).thenReturn(quotation);
-        when(quotationMapper.toResponse(quotation)).thenReturn(quotationResponse);
+        Quotation quotationForGarage1 = new Quotation();
+        quotationForGarage1.setGarageId(1);
+        quotationForGarage1.setQuoteNumber("RQ-2312-000002");
 
-        // Mock the sequence generation dependencies
-        when(quotationRepository.findLatestCodesByPrefix(anyString())).thenReturn(List.of("RQ-2312-000001"));
+        Quotation quotationForGarage2 = new Quotation();
+        quotationForGarage2.setGarageId(2);
+        quotationForGarage2.setQuoteNumber("RQ-2312-000003");
+
+        Quotation quotationForGarage3 = new Quotation();
+        quotationForGarage3.setGarageId(3);
+        quotationForGarage3.setQuoteNumber("RQ-2312-000004");
+
+        // Mock mapper to return new Quotation instances for each call
+        when(quotationMapper.toEntity(quotationRequest))
+                .thenReturn(new Quotation(), new Quotation(), new Quotation());
+
+        // Mock repository to return different quotations for each save
+        when(quotationRepository.save(any(Quotation.class)))
+                .thenReturn(quotationForGarage1, quotationForGarage2, quotationForGarage3);
+
+        // Mock the sequence generation
+        when(quotationRepository.findLatestCodesByPrefix(anyString()))
+                .thenReturn(List.of("RQ-2312-000001"));
+
+        QuotationResponse response1 = new QuotationResponse();
+        response1.setGarageId(1);
+        QuotationResponse response2 = new QuotationResponse();
+        response2.setGarageId(2);
+        QuotationResponse response3 = new QuotationResponse();
+        response3.setGarageId(3);
+
+        when(quotationMapper.toResponse(any(Quotation.class)))
+                .thenReturn(response1, response2, response3);
 
         // Act
-        QuotationResponse result = quotationService.createQuotation(quotationRequest);
+        List<QuotationResponse> result = quotationService.createQuotation(quotationRequest);
 
         // Assert
         assertNotNull(result);
-        assertEquals("Q123", result.getId());
-        verify(quotationMapper, times(1)).toEntity(quotationRequest);
-        verify(quotationRepository, times(1)).save(mappedQuotation);
-        verify(quotationMapper, times(1)).toResponse(quotation);
-        // Verify that the quote number was set (this happens in the service method)
-        assertNotNull(mappedQuotation.getQuoteNumber());
+        assertEquals(3, result.size());
+        assertEquals(1, result.get(0).getGarageId());
+        assertEquals(2, result.get(1).getGarageId());
+        assertEquals(3, result.get(2).getGarageId());
+
+        verify(quotationMapper, times(3)).toEntity(quotationRequest);
+        verify(quotationRepository, times(3)).save(any(Quotation.class));
+        verify(quotationMapper, times(3)).toResponse(any(Quotation.class));
+        verify(quotationRepository, times(3)).findLatestCodesByPrefix(anyString());
     }
 
     @Test
@@ -239,58 +270,88 @@ public class QuotationServiceImplTest {
     }
 
     @Test
+    void getQuotationByGarageId_shouldReturnQuotations() {
+        // Arrange
+        Quotation quotation1 = new Quotation();
+        quotation1.setGarageId(1);
+        Quotation quotation2 = new Quotation();
+        quotation2.setGarageId(1);
+
+        when(quotationRepository.findByGarageId(1)).thenReturn(List.of(quotation1, quotation2));
+        when(quotationMapper.toResponse(quotation1)).thenReturn(new QuotationResponse());
+        when(quotationMapper.toResponse(quotation2)).thenReturn(new QuotationResponse());
+
+        // Act
+        List<QuotationResponse> result = quotationService.getQuotationByGarageId(1);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        verify(quotationRepository, times(1)).findByGarageId(1);
+        verify(quotationMapper, times(2)).toResponse(any(Quotation.class));
+    }
+
+    @Test
     void generateQuotationCode_firstInMonth_shouldStartFrom000001() {
         // Arrange
         when(quotationRepository.findLatestCodesByPrefix(anyString())).thenReturn(List.of());
-
-        // Act - This is a private method, but we can test it through createQuotation
-        // or use reflection if needed. For now, we'll test the behavior through createQuotation
         when(quotationMapper.toEntity(any())).thenReturn(new Quotation());
         when(quotationRepository.save(any())).thenReturn(quotation);
         when(quotationMapper.toResponse(any())).thenReturn(quotationResponse);
 
-        // Set up the repository to return no existing codes (first in month)
-        when(quotationRepository.findLatestCodesByPrefix(anyString())).thenReturn(List.of());
-
         // Act
-        QuotationResponse result = quotationService.createQuotation(quotationRequest);
+        List<QuotationResponse> result = quotationService.createQuotation(quotationRequest);
 
-        // Assert - The quote number generation is tested indirectly
-        // You might want to use reflection to test the private method directly
-        verify(quotationRepository, times(1)).findLatestCodesByPrefix(anyString());
+        // Assert
+        assertNotNull(result);
+        verify(quotationRepository, times(3)).findLatestCodesByPrefix(anyString());
     }
 
     @Test
     void generateQuotationCode_nextInSequence_shouldIncrement() {
         // Arrange
-        when(quotationMapper.toEntity(any())).thenReturn(new Quotation());
-        when(quotationRepository.save(any())).thenReturn(quotation);
-        when(quotationMapper.toResponse(any())).thenReturn(quotationResponse);
-
-        // Set up the repository to return an existing code
+        when(quotationMapper.toEntity(any())).thenReturn(new Quotation(), new Quotation(), new Quotation());
+        when(quotationRepository.save(any())).thenReturn(quotation, quotation, quotation);
+        when(quotationMapper.toResponse(any())).thenReturn(quotationResponse, quotationResponse, quotationResponse);
         when(quotationRepository.findLatestCodesByPrefix(anyString())).thenReturn(List.of("RQ-2312-000001"));
 
         // Act
-        QuotationResponse result = quotationService.createQuotation(quotationRequest);
+        List<QuotationResponse> result = quotationService.createQuotation(quotationRequest);
 
-        // Assert - The quote number generation should increment from 000001 to 000002
-        verify(quotationRepository, times(1)).findLatestCodesByPrefix(anyString());
+        // Assert
+        assertNotNull(result);
+        verify(quotationRepository, times(3)).findLatestCodesByPrefix(anyString());
     }
 
     @Test
     void generateQuotationCode_invalidLatestCode_shouldStartFrom1() {
         // Arrange
-        when(quotationMapper.toEntity(any())).thenReturn(new Quotation());
-        when(quotationRepository.save(any())).thenReturn(quotation);
-        when(quotationMapper.toResponse(any())).thenReturn(quotationResponse);
-
-        // Set up the repository to return an invalid code format
+        when(quotationMapper.toEntity(any())).thenReturn(new Quotation(), new Quotation(), new Quotation());
+        when(quotationRepository.save(any())).thenReturn(quotation, quotation, quotation);
+        when(quotationMapper.toResponse(any())).thenReturn(quotationResponse, quotationResponse, quotationResponse);
         when(quotationRepository.findLatestCodesByPrefix(anyString())).thenReturn(List.of("RQ-2312-INVALID"));
 
         // Act
-        QuotationResponse result = quotationService.createQuotation(quotationRequest);
+        List<QuotationResponse> result = quotationService.createQuotation(quotationRequest);
 
-        // Assert - Should handle the invalid format and start from 1
-        verify(quotationRepository, times(1)).findLatestCodesByPrefix(anyString());
+        // Assert
+        assertNotNull(result);
+        verify(quotationRepository, times(3)).findLatestCodesByPrefix(anyString());
+    }
+
+    @Test
+    void createQuotation_emptyGarageIds_shouldReturnEmptyList() {
+        // Arrange
+        quotationRequest.setGarageIds(List.of());
+
+        // Act
+        List<QuotationResponse> result = quotationService.createQuotation(quotationRequest);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(quotationMapper, never()).toEntity(any());
+        verify(quotationRepository, never()).save(any());
+        verify(quotationMapper, never()).toResponse(any());
     }
 }

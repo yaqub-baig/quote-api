@@ -21,10 +21,10 @@ public class QuotationResponse {
     private String phoneNumber;
     private String email;
     private String fullName;
-    private String vehicleId;
+    private VehicleDetailResponse vehicle;
     private String employeeId;
     private String serviceId;
-    private String garageId;
-    private String customerId;
+    private Integer garageId;
+    private UserResponse customer;
     private String offerId;
 }
