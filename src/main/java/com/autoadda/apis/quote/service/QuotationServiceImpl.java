@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -25,10 +26,10 @@ public class QuotationServiceImpl implements QuotationService {
     @Override
     public List<QuotationResponse> getAllQuotations() {
         return quotationRepository.findAll ( )
-                .stream ()
-                .sorted ( ( q1, q2 ) -> q2.getIssuedDate ( ).compareTo ( q1.getIssuedDate ( ) ) )
+                .stream ( )
+                .sorted ( (q1, q2) -> q2.getIssuedDate ( ).compareTo ( q1.getIssuedDate ( ) ) )
                 .map ( quotationMapper::toResponse )
-                .toList ();
+                .toList ( );
     }
 
     @Override
@@ -46,21 +47,22 @@ public class QuotationServiceImpl implements QuotationService {
     @Override
     public List<QuotationResponse> createQuotation(QuotationRequest request) {
         List<Quotation> list = request.getGarageIds ( ).stream ( ).map ( garageId -> {
-        Quotation quotation = quotationMapper.toEntity ( request );
+            Quotation quotation = quotationMapper.toEntity ( request );
             quotation.setGarageId ( garageId );
             quotation.setQuoteNumber ( generateQuotationCode ( ) );
             return quotationRepository.save ( quotation );
         } ).toList ( );
-        return list.stream ().map(quotationMapper::toResponse ).toList ();
+        return list.stream ( ).map ( quotationMapper::toResponse ).toList ( );
     }
 
     @Override
     public Optional<QuotationResponse> updateQuotation(String id, QuotationRequest updated) {
         return quotationRepository.findById ( id )
-                .map ( existing -> {quotationMapper.updateEntity ( existing, updated );
+                .map ( existing -> {
+                    quotationMapper.updateEntity ( existing, updated );
                     Quotation save = quotationRepository.save ( existing );
-                    return quotationMapper.toResponse ( save);
-        } );
+                    return quotationMapper.toResponse ( save );
+                } );
     }
 
     @Override
@@ -74,8 +76,8 @@ public class QuotationServiceImpl implements QuotationService {
 
     @Override
     public List<QuotationResponse> getQuotationByGarageId(Integer id) {
-        return quotationRepository.findByGarageId ( id ).stream ()
-                .map ( quotationMapper::toResponse ).toList ();
+        return quotationRepository.findByGarageId ( id ).stream ( )
+                .map ( quotationMapper::toResponse ).toList ( );
     }
 
     private String generateQuotationCode() {

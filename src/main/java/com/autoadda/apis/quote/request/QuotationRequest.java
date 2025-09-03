@@ -12,13 +12,9 @@ import java.util.List;
 public class QuotationRequest {
 
     private String customerNotes;
-
-    private String vehicleId;
-
+    private Integer vehicleId;
     private String serviceId;
-
-    private String customerId;
-
+    private Integer customerId;
     private List<Integer> garageIds;
 
 }
