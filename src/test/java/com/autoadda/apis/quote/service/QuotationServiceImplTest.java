@@ -1,5 +1,6 @@
 package com.autoadda.apis.quote.service;
 
+import com.autoadda.apis.quote.response.GarageResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,7 +58,7 @@ public class QuotationServiceImplTest {
         quotationResponse = new QuotationResponse();
         quotationResponse.setId("Q123");
         quotationResponse.setQuoteNumber("RQ-2312-000001");
-        quotationResponse.setGarageId(1);
+        quotationResponse.setGarage (new GarageResponse (  ) );
     }
 
     @Test
@@ -173,11 +174,11 @@ public class QuotationServiceImplTest {
                 .thenReturn(List.of("RQ-2312-000001"));
 
         QuotationResponse response1 = new QuotationResponse();
-        response1.setGarageId(1);
+        response1.setGarage (new GarageResponse (  ));
         QuotationResponse response2 = new QuotationResponse();
-        response2.setGarageId(2);
+        response2.setGarage (new GarageResponse (  ));
         QuotationResponse response3 = new QuotationResponse();
-        response3.setGarageId(3);
+        response3.setGarage (new GarageResponse (  ));
 
         when(quotationMapper.toResponse(any(Quotation.class)))
                 .thenReturn(response1, response2, response3);
@@ -188,9 +189,9 @@ public class QuotationServiceImplTest {
         // Assert
         assertNotNull(result);
         assertEquals(3, result.size());
-        assertEquals(1, result.get(0).getGarageId());
-        assertEquals(2, result.get(1).getGarageId());
-        assertEquals(3, result.get(2).getGarageId());
+        assertEquals(new GarageResponse (  ), result.get(0).getGarage ());
+        assertEquals(new GarageResponse (  ), result.get(1).getGarage ());
+        assertEquals(new GarageResponse (  ), result.get(2).getGarage ());
 
         verify(quotationMapper, times(3)).toEntity(quotationRequest);
         verify(quotationRepository, times(3)).save(any(Quotation.class));

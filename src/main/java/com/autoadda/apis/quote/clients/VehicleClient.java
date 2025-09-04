@@ -1,4 +1,4 @@
-package com.autoadda.apis.quote.config;
+package com.autoadda.apis.quote.clients;
 
 import com.autoadda.apis.quote.response.VehicleDetailResponse;
 import org.springframework.cloud.openfeign.FeignClient;
