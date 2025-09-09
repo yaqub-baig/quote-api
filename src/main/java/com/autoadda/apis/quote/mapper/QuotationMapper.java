@@ -1,7 +1,8 @@
 package com.autoadda.apis.quote.mapper;
 
-import com.autoadda.apis.quote.config.AuthClient;
-import com.autoadda.apis.quote.config.VehicleClient;
+import com.autoadda.apis.quote.clients.AuthClient;
+import com.autoadda.apis.quote.clients.GarageClient;
+import com.autoadda.apis.quote.clients.VehicleClient;
 import com.autoadda.apis.quote.entity.Quotation;
 import com.autoadda.apis.quote.request.QuotationRequest;
 import com.autoadda.apis.quote.response.QuotationResponse;
@@ -18,7 +19,7 @@ public class QuotationMapper {
 
     private final AuthClient authClient;
     private final VehicleClient vehicleClient;
-
+    private final GarageClient garageClient;
     public Quotation toEntity(QuotationRequest quotation) {
         Quotation entity = new Quotation ( );
         entity.setId ( UUID.randomUUID ( ).toString ( ) );
@@ -39,7 +40,9 @@ public class QuotationMapper {
         Optional.ofNullable ( save.getExpiryDate ( ) ).ifPresent ( response::setExpiryDate );
         Optional.ofNullable ( save.getCustomerNotes ( ) ).ifPresent ( response::setCustomerNotes );
         Optional.ofNullable ( save.getVehicleId ( ) ).ifPresent ( vehicleId -> response.setVehicle ( vehicleClient.getVehicleDetailsById ( vehicleId ) ) );
-        Optional.ofNullable ( save.getGarageId ( ) ).ifPresent ( response::setGarageId );
+        Optional.ofNullable ( save.getGarageId ( ) ).ifPresent (id-> {
+            response.setGarage ( garageClient.getGarageById ( id ).getBody ( ) );
+        } );
         Optional.ofNullable ( save.getFullName ( ) ).ifPresent ( response::setFullName );
         Optional.ofNullable ( save.getPhoneNumber ( ) ).ifPresent ( response::setPhoneNumber );
         Optional.ofNullable ( save.getTechnicianNotes ( ) ).ifPresent ( response::setTechnicianNotes );

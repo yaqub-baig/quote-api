@@ -38,6 +38,7 @@ public class VehicleDetailResponse {
     private String insuPolicy;
     private String insuCompany;
     private String brandRequestReferenceId;
+//    private BrandOnboardResponse brandOnboardResponse;
     private MediaFileResponse mulkiaImageFront;
     private MediaFileResponse mulkiaImageBack;
     private List<MediaFileResponse> vehicleImages;

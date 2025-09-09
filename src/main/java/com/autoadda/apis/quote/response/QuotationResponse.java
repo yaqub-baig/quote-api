@@ -24,7 +24,7 @@ public class QuotationResponse {
     private VehicleDetailResponse vehicle;
     private String employeeId;
     private String serviceId;
-    private Integer garageId;
+    private GarageResponse garage;
     private UserResponse customer;
     private String offerId;
 }
