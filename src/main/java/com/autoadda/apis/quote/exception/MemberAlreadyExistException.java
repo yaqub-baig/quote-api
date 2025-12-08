@@ -5,7 +5,7 @@ package com.autoadda.apis.quote.exception;
  */
 public class MemberAlreadyExistException extends RuntimeException {
 
-	private String message;
+
 
 	public MemberAlreadyExistException() {
 		super();
@@ -13,7 +13,7 @@ public class MemberAlreadyExistException extends RuntimeException {
 
 	public MemberAlreadyExistException(String message) {
 		super(message);
-		this.message = message;
+
 	}
 
 	public MemberAlreadyExistException(String message, Throwable cause) {

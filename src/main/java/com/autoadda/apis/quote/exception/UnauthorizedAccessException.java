@@ -2,27 +2,26 @@ package com.autoadda.apis.quote.exception;
 
 public class UnauthorizedAccessException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
-	private String message;
+    private static final long serialVersionUID = 1L;
 
-	public UnauthorizedAccessException() {
 
-		super();
+    public UnauthorizedAccessException() {
 
-	}
+        super();
 
-	public UnauthorizedAccessException(String message) {
+    }
 
-		super(message);
+    public UnauthorizedAccessException(String message) {
 
-		this.message = message;
+        super(message);
 
-	}
 
-	public UnauthorizedAccessException(String message, Throwable cause) {
+    }
 
-		super(message, cause);
+    public UnauthorizedAccessException(String message, Throwable cause) {
 
-	}
+        super(message, cause);
+
+    }
 
 }

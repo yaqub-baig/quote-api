@@ -5,7 +5,7 @@ package com.autoadda.apis.quote.exception;
  */
 public class MemberNotFoundException extends RuntimeException {
 
-	private String message;
+
 
 	public MemberNotFoundException() {
 		super();
@@ -13,7 +13,7 @@ public class MemberNotFoundException extends RuntimeException {
 
 	public MemberNotFoundException(String message) {
 		super(message);
-		this.message = message;
+
 	}
 
 	public MemberNotFoundException(String message, Throwable cause) {

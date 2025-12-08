@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,7 +39,6 @@ public class VehicleDetailResponse {
     private String insuPolicy;
     private String insuCompany;
     private String brandRequestReferenceId;
-//    private BrandOnboardResponse brandOnboardResponse;
     private MediaFileResponse mulkiaImageFront;
     private MediaFileResponse mulkiaImageBack;
     private List<MediaFileResponse> vehicleImages;

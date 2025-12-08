@@ -41,7 +41,7 @@ public class QuotationMapper {
         Optional.ofNullable ( save.getCustomerNotes ( ) ).ifPresent ( response::setCustomerNotes );
         Optional.ofNullable ( save.getVehicleId ( ) ).ifPresent ( vehicleId -> response.setVehicle ( vehicleClient.getVehicleDetailsById ( vehicleId ) ) );
         Optional.ofNullable ( save.getGarageId ( ) ).ifPresent (id-> {
-            response.setGarage ( garageClient.getGarageById ( id ).getBody ( ) );
+            response.setGarage(garageClient.getGarageById(id).getBody());
         } );
         Optional.ofNullable ( save.getFullName ( ) ).ifPresent ( response::setFullName );
         Optional.ofNullable ( save.getPhoneNumber ( ) ).ifPresent ( response::setPhoneNumber );
