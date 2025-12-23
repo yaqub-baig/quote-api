@@ -80,6 +80,12 @@ public class QuotationServiceImpl implements QuotationService {
                 .map ( quotationMapper::toResponse ).toList ( );
     }
 
+    @Override
+    public List<QuotationResponse> getQuotationByCustomerId(Integer id) {
+        return quotationRepository.findByCustomerId ( id ).stream ( )
+                .map ( quotationMapper::toResponse ).toList ( );
+    }
+
     private String generateQuotationCode() {
         // Get current year and month
         LocalDateTime now = LocalDateTime.now ( );

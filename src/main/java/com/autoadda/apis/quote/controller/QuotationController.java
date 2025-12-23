@@ -27,6 +27,10 @@ public class QuotationController {
     public ResponseEntity<QuotationResponse> getQuotationById(@PathVariable String id) {
         return quotationService.getQuotationById ( id ).map ( ResponseEntity::ok ).orElseThrow ( () -> new ResourceNotFoundException ( "Quotation with id " + id + " not found" ) );
     }
+    @GetMapping("/customer/{id}")
+    public ResponseEntity<List<QuotationResponse>> getQuotationByCustomerId(@PathVariable Integer id) {
+        return ResponseEntity.ok (quotationService.getQuotationByCustomerId ( id ));
+    }
     @GetMapping("/garage/{id}")
     public ResponseEntity<List<QuotationResponse>> getQuotationByGarageId(@PathVariable Integer id) {
         return ResponseEntity.ok ( quotationService.getQuotationByGarageId ( id  ));
