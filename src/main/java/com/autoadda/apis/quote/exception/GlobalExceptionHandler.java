@@ -1,10 +1,9 @@
 package com.autoadda.apis.quote.exception;
 
-import java.nio.file.AccessDeniedException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.autoadda.apis.quote.response.GenericResponse;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.FileCountLimitExceededException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -15,14 +14,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 
-import com.autoadda.apis.quote.response.GenericResponse;
-
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.ConstraintViolationException;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import java.nio.file.AccessDeniedException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -152,6 +150,24 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<GenericResponse> handleConflict(ConflictException ex) {
 		log.warn("Conflict error", ex);
 		return buildResponse( HttpStatus.CONFLICT, ErrorMessage.ERROR_DATA_INTEGRITY);
+	}
+
+	@ExceptionHandler(BannerNotFoundException.class)
+	public ResponseEntity<GenericResponse> handleBannerNotFound(BannerNotFoundException ex) {
+		log.warn("Banner not found", ex);
+		return buildResponse( HttpStatus.NOT_FOUND, ex.getMessage() != null ? ex.getMessage() : ErrorMessage.ERROR_NOT_FOUND);
+	}
+
+	@ExceptionHandler(BannerRequestNotFoundException.class)
+	public ResponseEntity<GenericResponse> handleBannerRequestNotFound(BannerRequestNotFoundException ex) {
+		log.warn("Banner request not found", ex);
+		return buildResponse( HttpStatus.NOT_FOUND, ex.getMessage() != null ? ex.getMessage() : ErrorMessage.ERROR_NOT_FOUND);
+	}
+
+	@ExceptionHandler(BannerScheduleConflictException.class)
+	public ResponseEntity<GenericResponse> handleBannerScheduleConflict(BannerScheduleConflictException ex) {
+		log.warn("Banner schedule conflict", ex);
+		return buildResponse( HttpStatus.CONFLICT, ex.getMessage() != null ? ex.getMessage() : ErrorMessage.ERROR_DATA_INTEGRITY);
 	}
 
 	@ExceptionHandler(Exception.class)

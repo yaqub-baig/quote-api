@@ -5,7 +5,7 @@ package com.autoadda.apis.quote.exception;
  */
 public class AlreadyExistException extends RuntimeException {
 
-	private String message;
+	private  String message;
 
 	public AlreadyExistException() {
 		super();
