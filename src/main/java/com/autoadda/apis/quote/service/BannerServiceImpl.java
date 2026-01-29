@@ -26,6 +26,7 @@ public class BannerServiceImpl implements BannerService {
     private final BannerRepository bannerRepository;
     private final BannerMapper bannerMapper;
     private final BannerAnalyticsService bannerAnalyticsService;
+    private final MediaFileService mediafileService;
 
     @Override
     public List<BannerResponse> getAllBanners() {
@@ -99,8 +100,10 @@ public class BannerServiceImpl implements BannerService {
         bannerRepository.findById(id).ifPresent(banner -> {
             banner.setStatus(BannerStatus.ARCHIVED);
             banner.setUpdatedAt(LocalDateTime.now());
-            bannerRepository.save(banner);
-            log.info("Soft deleted (archived) banner: {}", id);
+            boolean b = mediafileService.deleteFile(banner.getBannerImage().getId());
+            log.info("banner image deleted: {}",b);
+            bannerRepository.delete(banner);
+            log.info("deleted (archived) banner: {}", id);
         });
         return true;
     }
