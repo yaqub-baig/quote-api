@@ -33,7 +33,7 @@ public class BannerMapper {
         banner.setPageLocation(request.getPageLocation());
         banner.setPosition(request.getPosition());
         banner.setBannerType(request.getBannerType());
-        banner.setStatus(BannerStatus.DRAFT.name());
+        banner.setStatus(BannerStatus.DRAFT);
         banner.setPriority(request.getPriority() != null ? request.getPriority() : 100);
         banner.setVendorId(request.getVendorId());
         banner.setStartDate(request.getStartDate());

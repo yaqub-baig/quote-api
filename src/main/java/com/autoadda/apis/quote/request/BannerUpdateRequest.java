@@ -1,5 +1,6 @@
 package com.autoadda.apis.quote.request;
 
+import com.autoadda.apis.quote.util.BannerStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class BannerUpdateRequest {
     private String pageLocation;
     private String position;
     private String bannerType;
-    private String status;
+    private BannerStatus status;
     private Integer priority;
     private LocalDateTime startDate;
     private LocalDateTime endDate;

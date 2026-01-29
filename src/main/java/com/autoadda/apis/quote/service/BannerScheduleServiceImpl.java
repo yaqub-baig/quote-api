@@ -125,7 +125,7 @@ public class BannerScheduleServiceImpl implements BannerScheduleService {
             bannerRepository.findById(schedule.getBannerId()).ifPresent(banner -> {
                 if (BannerStatus.DRAFT.name().equals(banner.getStatus()) ||
                     BannerStatus.PAUSED.name().equals(banner.getStatus())) {
-                    banner.setStatus(BannerStatus.ACTIVE.name());
+                    banner.setStatus(BannerStatus.ACTIVE);
                     banner.setUpdatedAt(now);
                     bannerRepository.save(banner);
                     log.info("Activated banner {} via schedule {}", banner.getBannerCode(), schedule.getScheduleCode());
@@ -142,7 +142,7 @@ public class BannerScheduleServiceImpl implements BannerScheduleService {
             bannerRepository.findById(schedule.getBannerId()).ifPresent(banner -> {
                 List<BannerSchedule> activeSchedules = scheduleRepository.findByBannerIdAndStatus(banner.getId(), "ACTIVE");
                 if (activeSchedules.isEmpty()) {
-                    banner.setStatus(BannerStatus.EXPIRED.name());
+                    banner.setStatus(BannerStatus.EXPIRED);
                     banner.setUpdatedAt(now);
                     bannerRepository.save(banner);
                     log.info("Expired banner {} after schedule {} completed", banner.getBannerCode(), schedule.getScheduleCode());
@@ -152,7 +152,7 @@ public class BannerScheduleServiceImpl implements BannerScheduleService {
 
         List<Banner> expiredBanners = bannerRepository.findExpiredActiveBanners(now);
         for (Banner banner : expiredBanners) {
-            banner.setStatus(BannerStatus.EXPIRED.name());
+            banner.setStatus(BannerStatus.EXPIRED);
             banner.setUpdatedAt(now);
             bannerRepository.save(banner);
             log.info("Expired banner {} due to end date", banner.getBannerCode());

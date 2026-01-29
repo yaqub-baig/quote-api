@@ -1,5 +1,6 @@
 package com.autoadda.apis.quote.entity;
 
+import com.autoadda.apis.quote.util.BannerStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,7 +44,8 @@ public class Banner {
     private String bannerType;
 
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private BannerStatus status;
 
     @Column(nullable = false)
     private Integer priority;

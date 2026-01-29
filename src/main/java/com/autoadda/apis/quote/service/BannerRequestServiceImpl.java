@@ -173,7 +173,7 @@ public class BannerRequestServiceImpl implements BannerRequestService {
         banner.setPageLocation(request.getRequestedPageLocation());
         banner.setPosition(request.getRequestedPosition());
         banner.setBannerType(BannerType.IMAGE.name());
-        banner.setStatus(BannerStatus.DRAFT.name());
+        banner.setStatus(BannerStatus.DRAFT);
         banner.setPriority(100);
         banner.setVendorId(request.getVendorId());
         banner.setStartDate(request.getRequestedStartDate());

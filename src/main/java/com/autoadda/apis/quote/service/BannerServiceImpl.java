@@ -36,7 +36,7 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
-    public List<BannerResponse> getBannersByStatus(String status) {
+    public List<BannerResponse> getBannersByStatus(BannerStatus status) {
         return bannerRepository.findByStatus(status)
                 .stream()
                 .map(bannerMapper::toResponse)
@@ -71,7 +71,7 @@ public class BannerServiceImpl implements BannerService {
         Banner banner = bannerMapper.toEntity(request);
         banner.setBannerCode(generateBannerCode());
         //have to change when we work on advancement on banner
-        banner.setStatus("ACTIVE");
+        banner.setStatus(BannerStatus.ACTIVE);
         banner.setCreatedBy(createdBy);
         Banner saved = bannerRepository.save(banner);
         log.info("Created banner with code: {}", saved.getBannerCode());
@@ -97,7 +97,7 @@ public class BannerServiceImpl implements BannerService {
             return false;
         }
         bannerRepository.findById(id).ifPresent(banner -> {
-            banner.setStatus(BannerStatus.ARCHIVED.name());
+            banner.setStatus(BannerStatus.ARCHIVED);
             banner.setUpdatedAt(LocalDateTime.now());
             bannerRepository.save(banner);
             log.info("Soft deleted (archived) banner: {}", id);
@@ -107,7 +107,7 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     @Transactional
-    public Optional<BannerResponse> updateBannerStatus(String id, String status) {
+    public Optional<BannerResponse> updateBannerStatus(String id, BannerStatus status) {
         return bannerRepository.findById(id)
                 .map(banner -> {
                     banner.setStatus(status);
@@ -120,7 +120,7 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     public List<BannerResponse> getActiveBannersForDisplay() {
-        return bannerRepository.findActiveBannersForDisplay(BannerStatus.ACTIVE.name(), LocalDateTime.now())
+        return bannerRepository.findActiveBannersForDisplay(BannerStatus.ACTIVE, LocalDateTime.now())
                 .stream()
                 .map(bannerMapper::toResponse)
                 .toList();
@@ -128,7 +128,7 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     public List<BannerResponse> getActiveBannersForPage(String pageLocation) {
-        return bannerRepository.findActiveBannersForPage(BannerStatus.ACTIVE.name(), pageLocation, LocalDateTime.now())
+        return bannerRepository.findActiveBannersForPage(BannerStatus.ACTIVE, pageLocation, LocalDateTime.now())
                 .stream()
                 .map(bannerMapper::toResponse)
                 .toList();
@@ -136,7 +136,7 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     public List<BannerResponse> getActiveBannersForSlot(String pageLocation, String position) {
-        return bannerRepository.findActiveBannersForSlot(BannerStatus.ACTIVE.name(), pageLocation, position, LocalDateTime.now())
+        return bannerRepository.findActiveBannersForSlot(BannerStatus.ACTIVE, pageLocation, position, LocalDateTime.now())
                 .stream()
                 .map(bannerMapper::toResponse)
                 .toList();

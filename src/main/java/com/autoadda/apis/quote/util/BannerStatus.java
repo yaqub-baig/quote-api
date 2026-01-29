@@ -9,3 +9,4 @@ public enum BannerStatus {
     ARCHIVED,
     REJECTED
 }
+/*    'DRAFT','PENDING_REVIEW','ACTIVE','PAUSED','EXPIRED','ARCHIVED','REJECTED'*/

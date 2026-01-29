@@ -9,6 +9,7 @@ import com.autoadda.apis.quote.request.BannerUpdateRequest;
 import com.autoadda.apis.quote.response.*;
 import com.autoadda.apis.quote.service.*;
 import com.autoadda.apis.quote.util.AuthorizationUtil;
+import com.autoadda.apis.quote.util.BannerStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class BannerAdminController {
     @GetMapping
     public ResponseEntity<List<BannerResponse>> getAllBanners(
             @RequestHeader("X-User-Role") String userRole,
-            @RequestParam(required = false) String status,
+            @RequestParam(required = false) BannerStatus status,
             @RequestParam(required = false) String pageLocation) {
         AuthorizationUtil.requireAdmin(userRole);
 
@@ -95,9 +96,8 @@ public class BannerAdminController {
     public ResponseEntity<BannerResponse> updateBannerStatus(
             @RequestHeader("X-User-Role") String userRole,
             @PathVariable String id,
-            @RequestBody Map<String, String> body) {
-        AuthorizationUtil.requireAdmin(userRole);
-        String status = body.get("status");
+            @RequestParam BannerStatus status) {
+
         if (status == null) {
             throw new IllegalArgumentException("Status is required");
         }
