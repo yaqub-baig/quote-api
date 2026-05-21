@@ -24,8 +24,8 @@ public class BannerPublicController {
     }
 
     @GetMapping("/page/{pageLocation}")
-    public ResponseEntity<List<BannerResponse>> getBannersForPage(@PathVariable String pageLocation) {
-        List<BannerResponse> banners = bannerService.getActiveBannersForPage(pageLocation);
+    public ResponseEntity<List<BannerResponse>> getBannersForPage(@PathVariable String pageLocation,@RequestParam(required = false) Boolean isForMobile) {
+        List<BannerResponse> banners = bannerService.getActiveBannersForPage(pageLocation,isForMobile);
         return ResponseEntity.ok(banners);
     }
 

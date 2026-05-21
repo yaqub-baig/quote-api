@@ -30,7 +30,7 @@ public interface BannerService {
 
     List<BannerResponse> getActiveBannersForDisplay();
 
-    List<BannerResponse> getActiveBannersForPage(String pageLocation);
+    List<BannerResponse> getActiveBannersForPage(String pageLocation, Boolean isForMobile);
 
     List<BannerResponse> getActiveBannersForSlot(String pageLocation, String position);
 

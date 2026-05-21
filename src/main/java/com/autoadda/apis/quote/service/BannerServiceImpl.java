@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -130,11 +131,22 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
-    public List<BannerResponse> getActiveBannersForPage(String pageLocation) {
-        return bannerRepository.findActiveBannersForPage(BannerStatus.ACTIVE, pageLocation, LocalDateTime.now())
+    public List<BannerResponse> getActiveBannersForPage(String pageLocation, Boolean isForMobile) {
+
+        Stream<BannerResponse> stream = bannerRepository
+                .findActiveBannersForPage(
+                        BannerStatus.ACTIVE,
+                        pageLocation,
+                        LocalDateTime.now()
+                )
                 .stream()
-                .map(bannerMapper::toResponse)
-                .toList();
+                .map(bannerMapper::toResponse);
+
+
+        if (Boolean.TRUE.equals(isForMobile)) {
+            stream = stream.filter(banner -> Boolean.TRUE.equals(banner.getIsForPhone()));
+        }
+        return stream.toList();
     }
 
     @Override
