@@ -61,7 +61,7 @@ public class BannerVendorController {
         BannerRequestResponse response = bannerRequestService.getRequestById(id)
                 .orElseThrow(() -> new BannerRequestNotFoundException("Request not found: " + id));
 
-        if (!response.getVendorId().equals(userId) && !"ADMIN".equals(userRole)) {
+        if (!response.getVendorId().equals(userId) && !AuthorizationUtil.isAdmin(userRole)) {
             throw new BannerRequestNotFoundException("Request not found: " + id);
         }
         return ResponseEntity.ok(response);
@@ -112,7 +112,7 @@ public class BannerVendorController {
         BannerResponse banner = bannerService.getBannerById(id)
                 .orElseThrow(() -> new BannerRequestNotFoundException("Banner not found: " + id));
 
-        if (!banner.getVendorId().equals(userId) && !"ADMIN".equals(userRole)) {
+        if (!banner.getVendorId().equals(userId) && !AuthorizationUtil.isAdmin(userRole)) {
             throw new BannerRequestNotFoundException("Banner not found: " + id);
         }
 

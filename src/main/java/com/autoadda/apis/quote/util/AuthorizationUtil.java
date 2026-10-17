@@ -19,6 +19,11 @@ public final class AuthorizationUtil {
     private AuthorizationUtil() {
     }
 
+    /** True when the roles header contains ADMIN, in any of the accepted formats. */
+    public static boolean isAdmin(String userRoles) {
+        return hasRole(userRoles, "ADMIN");
+    }
+
     public static void requireAdmin(String userRoles) {
         if (!hasRole(userRoles, "ADMIN")) {
             throw new UnauthorizedAccessException("Admin access required");

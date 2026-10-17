@@ -114,6 +114,8 @@ POST /banners/{id}/impression
 }
 ```
 
+Repeats from the same client IP for the same banner within `banner.tracking.dedupe-seconds` (default 60) are not counted and return `{"status": "skipped"}`, still with `200 OK`. This keeps a script calling the public endpoint in a loop from inflating the numbers or using up the impression limit.
+
 ---
 
 ### Track Banner Click
@@ -133,6 +135,8 @@ POST /banners/{id}/click
   "status": "recorded"
 }
 ```
+
+Repeats from the same client IP for the same banner within `banner.tracking.dedupe-seconds` (default 60) are not counted and return `{"status": "skipped"}`, still with `200 OK`. This keeps a script calling the public endpoint in a loop from inflating the numbers or using up the impression limit.
 
 ---
 
