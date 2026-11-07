@@ -44,4 +44,9 @@ public class VehicleDetailResponse {
     private List<MediaFileResponse> vehicleImages;
     private MediaFileResponse mainImage;
     private UserResponse owner;
+    /**
+     * Company (fleet / showroom) the vehicle is registered to, as sent by vehicle-api.
+     * Null for privately owned vehicles.
+     */
+    private Long companyId;
 }
